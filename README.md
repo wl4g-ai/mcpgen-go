@@ -47,16 +47,38 @@ mcpgen --input openapi.yaml --output generated-server
 -   `--validation`
     Enable OpenAPI validation (default: `false`).
 
--   `--package`
-    Name for the generated Go package (default: `mcpgen`).
-
 -   `--includes`
     Comma-separated list of additional includes for the generated code. Use `httpclient,types` to generate the HTTP client and types.
 
 ### Example
 
 ```sh
-mcpgen --input api/openapi.yaml --output ./generated-server --validation --package myserver --includes=httpclient,types
+mcpgen --input api/openapi.yaml --output ./generated-server --validation --includes=httpclient,types
+```
+
+## Output Structure
+
+The generated project is a complete, buildable Go project that can be run immediately:
+
+```
+generated-server/
+├── main.go                      # entry point (stdio transport)
+├── go.mod / go.sum              # auto-generated module
+└── internal/
+    ├── mcpserver/server.go      # NewMCPServer() + tool registration
+    ├── helpers/params.go        # ParamsParser[T]
+    └── mcptools/
+        ├── ListTodos.go         # per-tool input schema + handler
+        ├── CreateTodo.go
+        └── ...
+```
+
+### Build and Run
+
+```sh
+cd generated-server
+go build -o myserver .
+./myserver
 ```
 
 ## How It Works
