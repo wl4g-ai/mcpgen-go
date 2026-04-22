@@ -1,23 +1,6 @@
-# mcpgen: Seamlessly Transform OpenAPI APIs into AI Agent Tools
+# mcpgen: Transform OpenAPI APIs into AI Agent Tools
 
-**mcpgen** is a command-line tool that seamlessly generates production-ready Model Context Protocol (MCP) server boilerplate from your OpenAPI specifications, enabling you to easily expose your existing APIs as powerful tools for AI agents.
-
-
-## Key Features
-
--   **OpenAPI Compatibility:** Reads and processes OpenAPI specifications in YAML or JSON format, supporting versions **3.0**.
--   **Comprehensive MCP Server Generation:** Generates the full Go boilerplate required to set up an MCP server, including server initialization, tool registration, and handler skeletons.
--   **Accurate Schema Translation:** Automatically translates OpenAPI schema definitions into the necessary **JSON Schemas** for tool inputs (compatible with MCP) and generates detailed markdown-based **Response Templates (Prompts)** for various status codes and content types, providing rich context for AI models.
--   **Advanced Schema Support:** Handles complex OpenAPI schema constructs, including:
-    *   Arrays and nested structures
-    *   Type unions and `oneOf`/`anyOf`/`allOf` combinators
-    *   Recursive type definitions
-    *   Validation constraints (e.g., `minimum`, `maximum`, `maxLength`, `pattern`)
--   **Multiple Content Type Handling:** Correctly processes and generates templates for operations defining multiple request and response content types.
--   **Generated Code Quality:** Produces well-structured, idiomatic Go code with embedded schemas and prompts, leveraging constants for clarity and maintainability.
--   **Optional Client & Types Generation:** Can optionally generate a Go HTTP client and corresponding Go types based on your OpenAPI schema, simplifying the implementation logic within the generated MCP handlers.
--   **Developer Friendly:** Provides clear handler function skeletons with guidance on where to integrate your core logic to connect to the actual backend API.
--   **Battle-Tested Foundation:** The code generation logic is backed by extensive testing, ensuring high reliability (as demonstrated by 94% coverage and 200% test volume).
+**mcpgen** is a command-line tool that generates production-ready Model Context Protocol (MCP) servers from OpenAPI specifications, exposing your existing APIs as tools for AI agents.
 
 ## Installation
 
@@ -25,112 +8,34 @@
 go install github.com/lyeslabs/mcpgen/cmd/mcpgen@latest
 ```
 
-By default, the binary is installed to `$HOME/go/bin` (or `%USERPROFILE%\go\bin` on Windows).
-Make sure this directory is in your `PATH`.
+## Quick Start
 
-## Usage
-
-```sh
-mcpgen --input openapi.yaml --output generated-server
-```
-
-### Required flags
-
--   `--input`
-    Path to your OpenAPI specification file (YAML or JSON).
-
--   `--output`
-    Output directory for the generated MCP server boilerplate.
-
-### Optional flags
-
--   `--validation`
-    Enable OpenAPI validation (default: `false`).
-
--   `--includes`
-    Comma-separated list of additional includes for the generated code. Use `httpclient,types` to generate the HTTP client and types.
-
-### Example
-
-```sh
-mcpgen --input api/openapi.yaml --output ./generated-server --validation --includes=httpclient,types
-```
-
-## Output Structure
-
-The generated project is a complete, buildable Go project that can be run immediately:
-
-```
-generated-server/
-├── main.go                      # entry point (stdio transport)
-├── go.mod / go.sum              # auto-generated module
-└── internal/
-    ├── mcpserver/server.go      # NewMCPServer() + tool registration
-    ├── helpers/params.go        # ParamsParser[T]
-    └── mcptools/
-        ├── ListTodos.go         # per-tool input schema + handler
-        ├── CreateTodo.go
-        └── ...
-```
-
-### Build and Run
-
-```sh
-cd generated-server
-go build -o myserver .
-./myserver
-```
-
-## How It Works
-
-`mcpgen` acts as a bridge between your declarative OpenAPI specification and the programmatic Go code required for an MCP server. It reads your OpenAPI definition and automatically generates the necessary boilerplate, including the structured schemas and prompts essential for effective AI agent interaction.
-
-Let's illustrate this with an example of a moderately complex endpoint defined in OpenAPI:
+### 1. Prepare your OpenAPI spec
 
 ```yaml
-# This is a snippet from your OpenAPI specification
-/todos:
+# todoopenapi.yaml
+openapi: 3.0.3
+info:
+  title: Todo API
+  version: v1.0.0
+servers:
+  - url: https://api.example.com/v1
+paths:
+  /todos:
     get:
-      tags:
-        - Todos
-      summary: List all todo items
-      description: Retrieves a list of todo items, optionally filtered by status.
       operationId: listTodos
+      summary: List all todo items
       parameters:
         - name: status
           in: query
-          description: Filter todos by status (e.g., "pending", "completed")
-          required: false
           schema:
             type: string
             enum: [pending, completed, in-progress]
-        - name: token
-          in: cookie
-          description: Token for authentication
-          required: false
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 20
         - name: limit
           in: query
-          description: Maximum number of todos to return
-          required: false
           schema:
             type: integer
-            format: int32
-            minimum: 1
             default: 20
-        - name: offset
-          in: query
-          description: Number of todos to skip for pagination
-          required: false
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            default: 0
       responses:
         '200':
           description: A list of todo items.
@@ -139,118 +44,200 @@ Let's illustrate this with an example of a moderately complex endpoint defined i
               schema:
                 type: array
                 items:
-                  oneOf:
-                    - $ref: '#/components/schemas/Todo'
-                    - $ref: '#/components/schemas/NewTodo'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-
-# ... (The full spec would include components for #/components/schemas/Todo,
-# #/components/schemas/NewTodo, #/components/responses/BadRequest, etc.)
+                  $ref: '#/components/schemas/Todo'
+    post:
+      operationId: createTodo
+      summary: Create a new todo item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                priority:
+                  type: string
+                  enum: [low, medium, high]
+      responses:
+        '201':
+          description: Todo item created.
+  /todos/{todoId}:
+    get:
+      operationId: getTodoById
+      summary: Get a specific todo item
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested todo item.
+    put:
+      operationId: updateTodoById
+      summary: Update an existing todo item
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                status:
+                  type: string
+                  enum: [pending, in-progress, completed]
+      responses:
+        '200':
+          description: Todo item updated.
+    delete:
+      operationId: deleteTodoById
+      summary: Delete a todo item
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Todo item deleted.
+components:
+  schemas:
+    Todo:
+      type: object
+      required: [id, title, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum: [pending, in-progress, completed]
 ```
 
-When you run `mcpgen --input your_openapi.yaml --output generated-server` (and optionally `--includes=httpclient,types`), `mcpgen` analyzes this operation (`operationId: listTodos`) and generates Go code. This includes:
+### 2. Generate the MCP server
 
-1.  **JSON Schema for Input:** A constant string containing the JSON Schema representing the required and optional parameters for the `listTodos` tool:
+```sh
+mcpgen --input todoopenapi.yaml --output mytodoserver
+cd mytodoserver
+```
 
-    ```go
-    // Input Schema for the ListTodos tool
-    const listTodosInputSchema = `{
-      "properties": {
-        "limit": {
-          "default": 20,
-          "description": "Maximum number of todos to return",
-          "format": "int32",
-          "minimum": 1,
-          "type": "integer"
-        },
-        "offset": {
-          "default": 0,
-          "description": "Number of todos to skip for pagination",
-          "format": "int32",
-          "minimum": 0,
-          "type": "integer"
-        },
-        "status": {
-          "description": "Filter todos by status (e.g., \"pending\", \"completed\")",
-          "enum": [
-            "pending",
-            "completed",
-            "in-progress"
-          ],
-          "type": "string"
-        },
-        "token": {
-          "default": 20,
-          "description": "Token for authentication",
-          "format": "int32",
-          "minimum": 1,
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    }`
-    ```
+This produces a complete, buildable Go project:
 
-2.  **Markdown Templates for Responses:** Constant strings containing detailed markdown prompts for each potential response (based on status codes and content types), describing the structure and meaning of the data. This is crucial for LLMs to understand the tool's output:
+```
+mytodoserver/
+├── main.go                      # entry point (stdio/http transport)
+├── client.sh                    # quick curl-based test script
+├── go.mod / go.sum              # auto-generated module
+├── server                       # compiled binary
+└── internal/
+    ├── mcpserver/server.go      # MCP server setup + tool registration
+    ├── helpers/
+    │   ├── client.go            # ForwardRequest, parameter helpers
+    │   └── request_log.go       # Request logging with verbosity levels
+    └── mcptools/
+        ├── CreateTodo.go        # per-tool input schema + handler
+        ├── ListTodos.go
+        ├── GetTodoById.go
+        ├── UpdateTodoById.go
+        └── DeleteTodoById.go
+```
 
-    ```go
-    // Response Template for the ListTodos tool (Status: 200, Content-Type: application/json)
-    const ListTodosResponseTemplate_A = `# API Response Information
-    ... (detailed markdown describing the 200 response structure including the oneOf combining Todo and NewTodo schemas) ...
-    `
+### 3. Start the server
 
-    // Response Template for the ListTodos tool (Status: 400, Content-Type: application/json)
-    const ListTodosResponseTemplate_B = `# API Response Information
-    ... (detailed markdown describing the 400 error response structure) ...
-    `
+```sh
+# Point to your actual upstream API
+UPSTREAM_ENDPOINT=https://api.example.com/v1 \
+  ./server --transport http --port 8080
+```
 
-    // Response Template for the ListTodos tool (Status: 500, Content-Type: application/json)
-    const ListTodosResponseTemplate_C = `# API Response Information
-    ... (detailed markdown describing the 500 error response structure) ...
-    `
-    ```
-    *Note: The full content of the markdown templates is extensive and generated based on the OpenAPI response schemas.*
+## Server Configuration
 
-3.  **MCP Tool Registration:** A function to create and configure the `mcp.Tool` instance, embedding the operation's description and the generated input schema:
+### CLI flags
 
-    ```go
-    // NewListTodosMCPTool creates the MCP Tool instance for ListTodos
-    func NewListTodosMCPTool() mcp.Tool {
-    	return mcp.NewToolWithRawSchema(
-    		"ListTodos", // Operation ID becomes the Tool Name
-    		"List all todo items - Retrieves a list of todo items, optionally filtered by status.", // Summary + Description
-    		[]byte(listTodosInputSchema), // Embedded Input Schema
-    	)
-    }
-    ```
+| Flag | Description | Default |
+|---|---|---|
+| `--transport stdio\|http` | Transport mode | `stdio` |
+| `--port <number>` | HTTP server port | `8080` |
+| `--v <0-10>` | Request logging verbosity | `0` |
 
-4.  **Handler Function Skeleton:** A placeholder function where you will write the code to handle the tool call. This function receives the `mcp.CallToolRequest` (containing the input payload as JSON) and is where you will integrate with your actual backend API:
+### Environment variables
 
-    ```go
-    // ListTodosHandler is the handler function for the ListTodos tool.
-    // This function is automatically generated. Users should implement the actual
-    // logic within this function body to integrate with backend APIs.
-    // You can generate types, http client and helpers for parsing request params to facilitate the implementation.
-    func ListTodosHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-    	// IMPORTANT: Replace the following placeholder implementation with your actual logic.
-        // Use the 'request' parameter to access tool call arguments.
-        // Make HTTP calls or interact with services as needed.
-        // Return an *mcp.CallToolResult with the response payload, or an error.
+| Variable | Description |
+|---|---|
+| `UPSTREAM_ENDPOINT` | Base URL of the upstream API to forward requests to |
+| `HTTP_PROXY` / `HTTPS_PROXY` / `ALL_PROXY` | Proxy configuration (uses `http.ProxyFromEnvironment`) |
+| `NO_PROXY` | Hosts to exclude from proxy |
 
-        // Example placeholder implementation:
-        // Extract the parameters from the request and parse them.
-        // Call your backend API or perform the necessary operations using 'params'.
-        // Handle the response and errors accordingly.
-    	return nil, fmt.Errorf("ListTodos handler not implemented") // Placeholder until you add your logic
-    }
-    ```
+### Logging levels (`-v`)
 
-By generating all this structured boilerplate code, `mcpgen` allows you to focus solely on implementing the core integration logic within the generated handler functions – parsing the input payload (potentially simplified by generated types), calling your existing backend API (potentially simplified by a generated client), and mapping the backend response to the expected MCP `CallToolResult` format.
+| Level | Output |
+|---|---|
+| `0` | Silent (default) |
+| `1` | nginx-style access log: `[http] 200 POST /mcp (1ms)` |
+| `2` | + method + URL for upstream requests |
+| `3-4` | + query parameters |
+| `5-6` | + request/response headers |
+| `7-8` | + request body |
+| `9-10` | + pretty-printed JSON body |
 
+```sh
+# Quick — just one line per request
+UPSTREAM_ENDPOINT=https://api.example.com/v1 ./server --transport http -v 1
+
+# Full debug
+UPSTREAM_ENDPOINT=https://api.example.com/v1 ./server --transport http --port 9090 -v 9
+```
+
+## Testing with client.sh
+
+Every generated project includes a `client.sh` script for quick manual testing:
+
+```sh
+# Start the server
+UPSTREAM_ENDPOINT=https://api.example.com/v1 ./server --transport http --port 8080
+
+# In another terminal:
+./client.sh                          # Show help with example commands
+./client.sh list-tools              # List all available tools
+./client.sh call ListTodos '{"limit": 20, "status": "pending"}'
+./client.sh call CreateTodo '{"body": {"title": "Buy groceries", "priority": "medium"}}'
+./client.sh call GetTodoById '{"todoId": "550e8400-e29b-41d4-a716-446655440000"}'
+
+# Custom server URL
+MCP_SERVER_URL=http://localhost:9090/mcp ./client.sh list-tools
+```
+
+> **Note:** If your environment has `ALL_PROXY`/`HTTP_PROXY` set, `client.sh` automatically uses `--noproxy '*'` to bypass the proxy for localhost connections.
+
+## How It Works
+
+`mcpgen` reads your OpenAPI spec and generates for each API operation:
+
+1. **Input schema** — JSON Schema constant describing the tool's arguments
+2. **Response templates** — Markdown documentation for LLM context
+3. **Tool registration** — `NewFooMCPTool()` function
+4. **Handler function** — `FooHandler()` that forwards requests to the upstream API via `ForwardRequest()`
+
+You focus on customizing handler logic; `mcpgen` handles all the MCP boilerplate.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+[MIT License](LICENSE)
