@@ -74,13 +74,15 @@ Run the MCP server as a child process — recommended for local development.
 ```json
 {
   "mcp": {
-    "confluence": {
-      "command": "./myconfluence-mcp",
+    "myconfluence": {
+      "type": "local",
+      "command": ["./myconfluence-mcp"],
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
         "MCP_UPSTREAM_TOKEN": "your-token"
-      }
+      },
+      "enabled": true
     }
   }
 }
@@ -93,7 +95,7 @@ Run the MCP server as a child process — recommended for local development.
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "command": "./myconfluence-mcp",
       "args": ["--transport", "stdio"],
       "env": {
@@ -112,7 +114,7 @@ Run the MCP server as a child process — recommended for local development.
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "command": ["./myconfluence-mcp"],
       "args": ["--transport", "stdio"],
       "env": {
@@ -131,7 +133,7 @@ Run the MCP server as a child process — recommended for local development.
 ```yaml
 mcp:
   servers:
-    confluence:
+    myconfluence-r:
       command: ./myconfluence-mcp
       args: ["--transport", "stdio"]
       env:
@@ -146,7 +148,7 @@ mcp:
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "command": "./myconfluence-mcp",
       "args": ["--transport", "stdio"],
       "env": {
@@ -177,7 +179,8 @@ export MCP_UPSTREAM_TOKEN=your-token
 ```json
 {
   "mcp": {
-    "confluence": {
+    "myconfluence-r": {
+      "type": "remote",
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -195,7 +198,7 @@ export MCP_UPSTREAM_TOKEN=your-token
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -213,7 +216,7 @@ export MCP_UPSTREAM_TOKEN=your-token
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -231,7 +234,7 @@ export MCP_UPSTREAM_TOKEN=your-token
 ```yaml
 mcp:
   servers:
-    confluence:
+    myconfluence-r:
       url: http://localhost:8080/mcp
       env:
         MCP_UPSTREAM_ENDPOINT: https://example.atlassian.net/wiki/rest/api
@@ -245,7 +248,7 @@ mcp:
 ```json
 {
   "mcpServers": {
-    "confluence": {
+    "myconfluence-r": {
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
