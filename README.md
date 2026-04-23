@@ -22,6 +22,7 @@ This produces a complete Go project with tools for every operation:
 
 ```
 myconfluence-mcp/
+├── .credentials                 # file-based token (set MCP_UPSTREAM_TOKEN_FILE)
 ├── main.go                      # entry point (stdio/http transport)
 ├── client.sh                    # quick curl-based test script
 ├── Makefile                     # build / run / clean / test
@@ -50,8 +51,13 @@ The server defaults to httpbin.org which echoes requests — great for quick ver
 Set your actual upstream to enable real API calls:
 
 ```sh
-MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
+export MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
+# Option 1: pass token via env var
 MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v 1
+
+# Option 2: read token from file (safer, no shell history exposure)
+echo -n "your-token" > .credentials
+MCP_UPSTREAM_TOKEN_FILE=.credentials ./myconfluence-mcp --transport http --port 8080 -v 1
 ```
 
 ### 3. Test with client.sh
