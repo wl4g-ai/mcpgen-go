@@ -86,7 +86,8 @@ Run the MCP server as a child process — recommended for local development.
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       },
       "enabled": true
     }
@@ -106,7 +107,8 @@ Run the MCP server as a child process — recommended for local development.
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -125,7 +127,8 @@ Run the MCP server as a child process — recommended for local development.
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -145,6 +148,7 @@ mcp:
       env:
         MCP_UPSTREAM_ENDPOINT: https://example.atlassian.net/wiki/rest/api
         MCP_UPSTREAM_TOKEN: your-token
+        MCP_UPSTREAM_TOKEN_FILE: "/path/to/fallback/.credentials"
 ```
 
 ### Cursor
@@ -159,7 +163,8 @@ mcp:
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -190,7 +195,8 @@ export MCP_UPSTREAM_TOKEN=your-token
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -208,7 +214,8 @@ export MCP_UPSTREAM_TOKEN=your-token
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -226,7 +233,8 @@ export MCP_UPSTREAM_TOKEN=your-token
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
@@ -245,6 +253,7 @@ mcp:
       env:
         MCP_UPSTREAM_ENDPOINT: https://example.atlassian.net/wiki/rest/api
         MCP_UPSTREAM_TOKEN: your-token
+        MCP_UPSTREAM_TOKEN_FILE: "/path/to/fallback/.credentials"
 ```
 
 ### Cursor (remote)
@@ -258,7 +267,8 @@ mcp:
       "url": "http://localhost:8080/mcp",
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
+        "MCP_UPSTREAM_TOKEN": "your-token",
+        "MCP_UPSTREAM_TOKEN_FILE": "/path/to/fallback/.credentials"
       }
     }
   }
