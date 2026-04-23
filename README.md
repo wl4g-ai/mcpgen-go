@@ -1,4 +1,4 @@
-# mcpgen — Go MCP server Generator from OpenAPI 3.x specs
+# Go MCP server Generator from OpenAPI 3.x specification
 
 Generate production-ready Model Context Protocol (MCP) servers from OpenAPI specs. Each API operation becomes an AI tool that forwards requests to your upstream service.
 
@@ -50,9 +50,8 @@ The server defaults to httpbin.org which echoes requests — great for quick ver
 Set your actual upstream to enable real API calls:
 
 ```sh
-MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api \
-MCP_UPSTREAM_TOKEN=your-token \
-  ./myconfluence-mcp --transport http --port 8080 -v 1
+MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
+MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v 1
 ```
 
 ### 3. Test with client.sh
@@ -140,13 +139,13 @@ mcp:
 
 ### Cursor
 
-Settings → Features → MCP Servers → Add Server:
+`~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "confluence": {
-      "command": ["./myconfluence-mcp"],
+      "command": "./myconfluence-mcp",
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -161,9 +160,9 @@ Settings → Features → MCP Servers → Add Server:
 
 | Flag | Description | Default |
 |---|---|---|
-| `--transport stdio\|http` | Transport mode | `stdio` |
+| `--transport <stdio\|http>` | Transport mode | `stdio` |
 | `--port <number>` | HTTP server port | `8080` |
-| `--v <0-10>` | Request logging verbosity | `0` |
+| `-v, --verbose <0-10>` | Request logging verbosity | `0` |
 
 ### Logging levels
 
