@@ -63,7 +63,9 @@ MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v
 
 ## Agent Integration
 
-For any MCP-compatible IDE, use **stdio** transport.
+### Local Mode (stdio)
+
+Run the MCP server as a child process — recommended for local development.
 
 ### OpenCode
 
@@ -151,6 +153,84 @@ mcp:
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
         "MCP_UPSTREAM_TOKEN": "your-token"
       }
+    }
+  }
+}
+```
+
+### Remote Mode (HTTP)
+
+Run the server separately and connect agents via HTTP transport. Suitable for shared instances, cloud deployments, or when agent cannot spawn local processes.
+
+Start the server:
+
+```sh
+MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
+MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v 1
+```
+
+### OpenCode (remote)
+
+`~/.config/opencode/config.json`:
+
+```json
+{
+  "mcp": {
+    "confluence": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+### Claude Code (remote)
+
+`~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+### Claude Desktop (remote)
+
+`~/.config/claude-desktop/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+```
+
+### Codex CLI (remote)
+
+`~/.codex/config.yaml`:
+
+```yaml
+mcp:
+  servers:
+    confluence:
+      url: http://localhost:8080/mcp
+```
+
+### Cursor (remote)
+
+`~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "url": "http://localhost:8080/mcp"
     }
   }
 }
