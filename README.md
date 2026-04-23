@@ -64,45 +64,7 @@ MCP_UPSTREAM_TOKEN=your-token \
 
 ## IDE Integration
 
-For Claude Desktop, Cursor, Cline, Codex CLI, or any MCP-compatible IDE, use **stdio** transport.
-
-### Claude Desktop
-
-Configuration file: `~/.config/claude-desktop/claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "confluence": {
-      "command": ["./myconfluence-mcp"],
-      "args": ["--transport", "stdio"],
-      "env": {
-        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
-      }
-    }
-  }
-}
-```
-
-### Cursor (Composer → Agent Mode)
-
-Settings → Features → MCP Servers → Add Server:
-
-```json
-{
-  "mcpServers": {
-    "confluence": {
-      "command": ["./myconfluence-mcp"],
-      "args": ["--transport", "stdio"],
-      "env": {
-        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
-        "MCP_UPSTREAM_TOKEN": "your-token"
-      }
-    }
-  }
-}
-```
+For any MCP-compatible IDE, use **stdio** transport.
 
 ### OpenCode
 
@@ -113,6 +75,44 @@ Settings → Features → MCP Servers → Add Server:
   "mcp": {
     "confluence": {
       "command": "./myconfluence-mcp",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+`~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "command": "./myconfluence-mcp",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+`~/.config/claude-desktop/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "command": ["./myconfluence-mcp"],
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -136,6 +136,25 @@ mcp:
       env:
         MCP_UPSTREAM_ENDPOINT: https://example.atlassian.net/wiki/rest/api
         MCP_UPSTREAM_TOKEN: your-token
+```
+
+### Cursor
+
+Settings → Features → MCP Servers → Add Server:
+
+```json
+{
+  "mcpServers": {
+    "confluence": {
+      "command": ["./myconfluence-mcp"],
+      "args": ["--transport", "stdio"],
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
+    }
+  }
+}
 ```
 
 ## Server CLI
