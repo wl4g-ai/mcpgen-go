@@ -169,18 +169,20 @@ mcp:
 | Level | Output |
 |---|---|
 | `0` | Silent |
-| `1` | Access log: `[http] 200 POST /mcp (1ms)` |
-| `2` | + upstream method + URL |
-| `5-6` | + headers |
-| `7-8` | + body |
-| `9-10` | + pretty JSON |
+| `1` | HTTP access log: `[http] sid=- 200 POST /mcp (1ms)` |
+| `2` | MCP request log: `[mcp] tool=SearchContent args={...}`, upstream method + URL |
+| `3` | + upstream query params |
+| `5` | + request/response headers |
+| `7` | + request/response body |
+| `9` | + pretty-printed JSON body |
+| `10` | Same as 9 (full debug) |
 
 ### Environment variables
 
 | Variable | Description |
 |---|---|
 | `MCP_UPSTREAM_ENDPOINT` | Base URL of the upstream API (default: `https://httpbin.org/anything`) |
-| `MCP_UPSTREAM_TOKEN` | Bearer token for upstream auth (`client.sh` only) |
+| `MCP_UPSTREAM_TOKEN` | Bearer token for upstream auth (fallback when no Authorization header from client) |
 
 ## License
 
