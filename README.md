@@ -76,7 +76,7 @@ Run the MCP server as a child process — recommended for local development.
   "mcp": {
     "myconfluence": {
       "type": "local",
-      "command": ["./myconfluence-mcp"],
+      "command": ["bash", "-c", "./myconfluence-mcp"],
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -115,7 +115,7 @@ Run the MCP server as a child process — recommended for local development.
 {
   "mcpServers": {
     "myconfluence-r": {
-      "command": ["./myconfluence-mcp"],
+      "command": ["bash", "-c", "./myconfluence-mcp"],
       "args": ["--transport", "stdio"],
       "env": {
         "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
@@ -286,6 +286,17 @@ mcp:
 |---|---|
 | `MCP_UPSTREAM_ENDPOINT` | Base URL of the upstream API (default: `https://httpbin.org/anything`) |
 | `MCP_UPSTREAM_TOKEN` | Bearer token for upstream auth (fallback when no Authorization header from client) |
+| `MCP_UPSTREAM_TOKEN_FILE` | Path to a file containing the bearer token (alternative to `MCP_UPSTREAM_TOKEN`) |
+
+### Token retrieval priority
+
+The server tries to obtain a Bearer token in this order:
+
+1. Authorization header from the client's HTTP request (forwarded)
+2. `MCP_UPSTREAM_TOKEN` environment variable
+3. `MCP_UPSTREAM_TOKEN_FILE` (read from file — ideal for Kubernetes secrets)
+4. macOS Keychain (`security find-generic-password -s mcpgen-upstream -wa ""`)
+5. Windows Credential Manager (`cmdkey /get:mcpgen-upstream`)
 
 ## License
 
