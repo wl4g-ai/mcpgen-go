@@ -61,7 +61,7 @@ MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v
 ./client.sh call GetPage '{"id": "123456"}'
 ```
 
-## IDE Integration
+## Agent Integration
 
 For any MCP-compatible IDE, use **stdio** transport.
 
