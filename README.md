@@ -165,8 +165,9 @@ Run the server separately and connect agents via HTTP transport. Suitable for sh
 Start the server:
 
 ```sh
-MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
-MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v 1
+export MCP_UPSTREAM_ENDPOINT=https://example.atlassian.net/wiki/rest/api
+export MCP_UPSTREAM_TOKEN=your-token
+./myconfluence-mcp --transport http --port 8080 -v 1
 ```
 
 ### OpenCode (remote)
@@ -177,7 +178,11 @@ MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v
 {
   "mcp": {
     "confluence": {
-      "url": "http://localhost:8080/mcp"
+      "url": "http://localhost:8080/mcp",
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
     }
   }
 }
@@ -191,7 +196,11 @@ MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v
 {
   "mcpServers": {
     "confluence": {
-      "url": "http://localhost:8080/mcp"
+      "url": "http://localhost:8080/mcp",
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
     }
   }
 }
@@ -205,7 +214,11 @@ MCP_UPSTREAM_TOKEN=your-token ./myconfluence-mcp --transport http --port 8080 -v
 {
   "mcpServers": {
     "confluence": {
-      "url": "http://localhost:8080/mcp"
+      "url": "http://localhost:8080/mcp",
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
     }
   }
 }
@@ -220,6 +233,9 @@ mcp:
   servers:
     confluence:
       url: http://localhost:8080/mcp
+      env:
+        MCP_UPSTREAM_ENDPOINT: https://example.atlassian.net/wiki/rest/api
+        MCP_UPSTREAM_TOKEN: your-token
 ```
 
 ### Cursor (remote)
@@ -230,7 +246,11 @@ mcp:
 {
   "mcpServers": {
     "confluence": {
-      "url": "http://localhost:8080/mcp"
+      "url": "http://localhost:8080/mcp",
+      "env": {
+        "MCP_UPSTREAM_ENDPOINT": "https://example.atlassian.net/wiki/rest/api",
+        "MCP_UPSTREAM_TOKEN": "your-token"
+      }
     }
   }
 }
