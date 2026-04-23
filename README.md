@@ -1,4 +1,4 @@
-# mcpgen — The Go MCP server Generator from OpenAPI 3.x specification
+# mcpgen — Go MCP server Generator from OpenAPI 3.x specs
 
 Generate production-ready Model Context Protocol (MCP) servers from OpenAPI specs. Each API operation becomes an AI tool that forwards requests to your upstream service.
 
