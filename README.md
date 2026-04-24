@@ -275,6 +275,36 @@ mcp:
 }
 ```
 
+## Generator CLI
+
+```sh
+./bin/mcpgen -i spec.yaml -o output-dir [--includes /path1,/path2] [--excludes /path3]
+```
+
+| Flag | Description |
+|---|---|
+| `-i, --input` | Path to the OpenAPI specification file (JSON or YAML) |
+| `-o, --output` | Path to the output MCP server directory |
+| `--includes` | Comma-separated OpenAPI paths to include (omit for all) |
+| `--excludes` | Comma-separated OpenAPI paths to exclude |
+| `--validation` | Enable OpenAPI validation |
+
+### Path filtering
+
+Use `--includes` and `--excludes` to control which API paths generate MCP tools. Paths match the OpenAPI path keys (e.g., `/wiki/rest/api/page`, `/space/{id}`). A path appearing in both flags triggers an error.
+
+```sh
+# Only generate tools for pages and spaces
+./bin/mcpgen -i spec.yaml -o mymcp --includes "/wiki/rest/api/page,/wiki/rest/api/space"
+
+# Generate all tools except health checks
+./bin/mcpgen -i spec.yaml -o mymcp --excludes "/health,/status"
+```
+
+### Tool name truncation
+
+Long `operationId` values are automatically truncated to 125 characters with a hash suffix to preserve uniqueness, ensuring compatibility with MCP tool name limits.
+
 ## Server CLI
 
 | Flag | Description | Default |
