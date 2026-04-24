@@ -14,7 +14,8 @@ make
 ### 1. Generate the MCP server
 
 ```sh
-./bin/mcpgen -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp
+./bin/mcpgen -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp \
+  --includes "/space,/content,/page"
 cd myconfluence-mcp
 ```
 
@@ -281,13 +282,15 @@ mcp:
 ./bin/mcpgen -i spec.yaml -o output-dir [--includes /path1,/path2] [--excludes /path3]
 ```
 
-| Flag | Description |
-|---|---|
-| `-i, --input` | Path to the OpenAPI specification file (JSON or YAML) |
-| `-o, --output` | Path to the output MCP server directory |
-| `--includes` | Comma-separated OpenAPI paths to include (omit for all) |
-| `--excludes` | Comma-separated OpenAPI paths to exclude |
-| `--validation` | Enable OpenAPI validation |
+| Flag | Description | Example |
+|---|---|---|
+| `-i, --input` | Path to the OpenAPI specification file (JSON or YAML) | `spec.yaml` |
+| `-o, --output` | Path to the output MCP server directory | `./my-mcp` |
+| `--includes` | Comma-separated OpenAPI paths to generate (omit for all) | `/space,/content,/page` |
+| `--excludes` | Comma-separated OpenAPI paths to skip | `/health,/status` |
+| `--validation` | Enable OpenAPI schema validation | |
+
+Paths match the OpenAPI path keys as they appear in the spec (e.g., `/space/{spaceKey}` → `/space`). Paths containing commas must be quoted. A path appearing in both `--includes` and `--excludes` triggers an error.
 
 ### Path filtering
 
