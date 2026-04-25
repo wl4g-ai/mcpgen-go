@@ -11,7 +11,7 @@ make
 
 ## Quick Start
 
-### 1. Generate the MCP server
+### 1. Generate the MCP server (e.g. Confluence API)
 
 ```sh
 ./bin/mcpgen -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp \
