@@ -15,7 +15,7 @@ make
 
 ```sh
 ./bin/mcpgen -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp \
-  --includes "/space,/content,/page"
+  --includes "listSpaces,createPage,updatePage,deletePage"
 cd myconfluence-mcp
 ```
 
@@ -279,29 +279,36 @@ mcp:
 ## Generator CLI
 
 ```sh
-./bin/mcpgen -i spec.yaml -o output-dir [--includes /path1,/path2] [--excludes /path3]
+./bin/mcpgen -i spec.yaml -o output-dir [--includes op1,op2] [--excludes op3] [-v]
 ```
 
 | Flag | Description | Example |
 |---|---|---|
 | `-i, --input` | Path to the OpenAPI specification file (JSON or YAML) | `spec.yaml` |
 | `-o, --output` | Path to the output MCP server directory | `./my-mcp` |
-| `--includes` | Comma-separated OpenAPI paths to generate (omit for all) | `/space,/content,/page` |
-| `--excludes` | Comma-separated OpenAPI paths to skip | `/health,/status` |
+| `--includes` | Comma-separated `operationId` values to generate (omit for all) | `listSpaces,createPage` |
+| `--excludes` | Comma-separated `operationId` values to skip | `healthCheck,status` |
+| `-v, --verbose` | Print step-by-step generation details | |
 | `--validation` | Enable OpenAPI schema validation | |
 
-Paths match the OpenAPI path keys as they appear in the spec (e.g., `/space/{spaceKey}` → `/space`). Paths containing commas must be quoted. A path appearing in both `--includes` and `--excludes` triggers an error.
+Values are matched against the `operationId` field in the OpenAPI spec (exact string match). An `operationId` appearing in both `--includes` and `--excludes` triggers an error.
 
-### Path filtering
+### Filtering
 
-Use `--includes` and `--excludes` to control which API paths generate MCP tools. Paths match the OpenAPI path keys (e.g., `/wiki/rest/api/page`, `/space/{id}`). A path appearing in both flags triggers an error.
+Use `--includes` and `--excludes` to control which operations generate MCP tools. Values are the `operationId` strings from your OpenAPI spec.
 
 ```sh
-# Only generate tools for pages and spaces
-./bin/mcpgen -i spec.yaml -o mymcp --includes "/wiki/rest/api/page,/wiki/rest/api/space"
+# Only generate tools for specific operations
+./bin/mcpgen -i spec.yaml -o mymcp --includes "listSpaces,createPage,getSpaceContent"
 
 # Generate all tools except health checks
-./bin/mcpgen -i spec.yaml -o mymcp --excludes "/health,/status"
+./bin/mcpgen -i spec.yaml -o mymcp --excludes "healthCheck,status"
+
+# Generate all tools except a few
+./bin/mcpgen -i spec.yaml -o mymcp --excludes "uploadAttachment,removeLabel"
+
+# Preview what gets included/excluded
+./bin/mcpgen -i spec.yaml -o mymcp --includes "listSpaces" -v
 ```
 
 ### Tool name truncation
