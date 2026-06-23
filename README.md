@@ -291,13 +291,16 @@ Invoke tools directly from the command line — no MCP agent needed. Useful for 
 #   Deletepage                          Move a page to trash (soft delete) or permanently delete it
 #   ...
 
-# Call a tool with named arguments (key=value)
-./myconfluence-mcp -t cli call Getpage id=123456
-./myconfluence-mcp -t cli call Listspaces limit=5 type=global
-./myconfluence-mcp -t cli call Searchcontent cql='type=page AND text~"API"' limit=10
+# Show tool-specific help (GNU-style usage)
+./myconfluence-mcp -t cli Getpage --help
+
+# Call a tool with GNU-style --flag arguments
+./myconfluence-mcp -t cli Getpage --id 123456
+./myconfluence-mcp -t cli Listspaces --limit 5 --type=global
+./myconfluence-mcp -t cli Searchcontent --cql 'type=page AND text~"API"' --limit 10
 
 # Call a tool without arguments (for tools that have no required params)
-./myconfluence-mcp -t cli call Listspaces
+./myconfluence-mcp -t cli Listspaces
 ```
 
 ## Generator CLI
