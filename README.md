@@ -295,11 +295,11 @@ export MCP_UPSTREAM_TOKEN=your-token
 ./myconfluence-mcp -t cli Getpage --help
 
 # Call a tool with GNU-style --flag arguments
-./myconfluence-mcp -t cli Listspaces --limit=5 --type global
-./myconfluence-mcp -t cli Searchcontent --cql 'type=page AND text~"API"' --limit 10
+./myconfluence-mcp -t cli ListSpaces --limit=5 --type global
+./myconfluence-mcp -t cli SearchContent --cql 'type=page AND text~"API"' --limit 10
 
 # Call a tool without arguments (for tools that have no required params)
-./myconfluence-mcp -t cli Listspaces
+./myconfluence-mcp -t cli ListSpaces
 ```
 
 ## Generator CLI
@@ -401,8 +401,8 @@ For specs with many operations, limit which tools AI agents can discover via an 
 ```yaml
 tools:
   include:
-    - Listspaces
-    - Searchcontent
+    - ListSpaces
+    - SearchContent
 ```
 
 When `tools.include` is non-empty, only those tools are registered with the MCP server and shown in `-t cli list`. When absent or empty, all tools are available.
