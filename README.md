@@ -14,7 +14,7 @@ make
 ### 1. Generate the MCP server (e.g. Confluence API)
 
 ```sh
-./bin/mcpgen -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp \
+./bin/mcpgen -v -i testdata/example_confluence_oas_v3.1.yaml -o myconfluence-mcp \
   --includes "listSpaces,createPage,updatePage,deletePage"
 cd myconfluence-mcp
 ```
