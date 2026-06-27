@@ -10,10 +10,10 @@ Generate production-ready Model Context Protocol (MCP) servers from OpenAPI spec
 make
 ```
 
-### Generate the Confluence MCP server for example
+### Generate the Confluence MCP server for examples
 
 ```sh
-./bin/mcpgen -v -i testdata/confluence-server-v10.2.14.oas.v3.0.1.json -o /tmp/confluence-mcp \
+./bin/mcpgen -v -i examples/confluence-mcp/confluence-server-v10.2.14.oas.v3.0.1.json -o /tmp/confluence-mcp \
   --includes "listSpaces,createPage,updatePage,deletePage"
 cd /tmp/confluence-mcp
 ```
@@ -98,6 +98,8 @@ MCP_UPSTREAM_TOKEN_FILE=.credentials ./confluence-mcp --transport http --port 80
 
 - https://help.sonatype.com/en/iq-api-reference.html
 - https://sonatype.github.io/sonatype-documentation/api/iq/latest/iq-api.json
+- https://sonatype.github.io/sonatype-documentation/api/iq/1.204.2-01/iq-api.json
+- https://sonatype.github.io/sonatype-documentation/api/iq/1.203.0-01/iq-api.json
 
 ### Sonatype - Nexus Repository
 
