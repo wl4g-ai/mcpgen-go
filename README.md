@@ -13,9 +13,9 @@ make
 ### Generate the Confluence MCP server for examples
 
 ```sh
-./bin/mcpgen -v -i examples/confluence-mcp/confluence-server-v10.2.14.oas.v3.0.1.json -o /tmp/confluence-mcp \
+./bin/mcpgen -v -i examples/confluence-mcp/confluence-server-v10.2.14.oas.v3.0.1.json -o examples/confluence-mcp \
   --includes "listSpaces,createPage,updatePage,deletePage"
-cd /tmp/confluence-mcp
+cd examples/confluence-mcp
 ```
 
 This produces a complete Go project with tools for every operation:
@@ -41,12 +41,12 @@ confluence-mcp/
         └── ...
 ```
 
-### Start in the `HTTP` mode
+### Start in `HTTP` mode
 
 The server defaults to httpbin.org which echoes requests — great for quick verification:
 
 ```sh
-/path/to/confluence-mcp --transport http --port 8080 -v 1
+examples/confluence-mcp --transport http --port 8080 -v 1
 # MCP_UPSTREAM_ENDPOINT=https://httpbin.org/anything
 ```
 
