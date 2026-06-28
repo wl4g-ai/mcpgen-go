@@ -26,7 +26,7 @@ confluence-mcp/
 ├   └── confluence-mcp            # compiled binary
 ├── .credentials                 # file-based token (set MCP_UPSTREAM_TOKEN_FILE)
 ├── main.go                      # entry point (stdio/http/cli transport)
-├── client.sh                    # quick curl-based test script
+├── mcpclient.sh                    # quick curl-based test script
 ├── Makefile                     # build / run / clean / test
 ├── confluence-mcp               # compiled binary
 └── internal/
@@ -62,11 +62,11 @@ echo -n "your-token" > .credentials
 MCP_UPSTREAM_TOKEN_FILE=.credentials ./confluence-mcp --transport http --port 8080 -v 1
 ```
 
-### Test with client.sh for `HTTP` transport only.
+### Test with mcpclient.sh for `HTTP` transport only.
 
 ```sh
-./client.sh list-tools
-./client.sh call GetPage '{"id": "123456"}'
+./mcpclient.sh list-tools
+./mcpclient.sh call GetPage '{"id": "123456"}'
 ```
 
 ## Populars application Swagger
